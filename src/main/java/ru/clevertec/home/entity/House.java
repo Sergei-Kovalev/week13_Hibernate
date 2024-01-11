@@ -4,10 +4,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.NaturalId;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -22,6 +21,7 @@ public class House {
     @Column(name = "id")
     private Long id;
 
+    @NaturalId
     @Column(name = "uuid")
     private UUID uuid;
 
@@ -35,18 +35,18 @@ public class House {
     @Column(name = "create_date")
     private LocalDateTime createDate;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "person_owners_houses",
-            joinColumns = @JoinColumn(name = "house_id"),
-            inverseJoinColumns = @JoinColumn(name = "person_owner_id")
-    )
-    private List<Person> owners;
-
-    public void addOwners(Person person) {
-        if (owners == null) {
-            owners = new ArrayList<>();
-        }
-        owners.add(person);
-    }
+//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JoinTable(
+//            name = "person_owners_houses",
+//            joinColumns = @JoinColumn(name = "house_id"),
+//            inverseJoinColumns = @JoinColumn(name = "person_owner_id")
+//    )
+//    private List<Person> owners;
+//
+//    public void addOwners(Person person) {
+//        if (owners == null) {
+//            owners = new ArrayList<>();
+//        }
+//        owners.add(person);
+//    }
 }

@@ -37,7 +37,7 @@ public class Person {
     @JoinColumn(name = "passport_id")
     private Passport passport;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "person_owners_houses",
             joinColumns = @JoinColumn(name = "person_owner_id"),
@@ -45,7 +45,7 @@ public class Person {
     )
     private List<House> ownerHouses;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "residence_id")
     private House residence;
 
