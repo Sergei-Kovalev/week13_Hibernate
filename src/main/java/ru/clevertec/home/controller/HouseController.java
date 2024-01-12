@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/houses")
-public class Controller {
+public class HouseController {
 
     @Autowired
     private HouseService houseService;
@@ -27,7 +27,7 @@ public class Controller {
     }
 
     @GetMapping("/")
-    public ResponseEntity<String> findByID(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
+    public ResponseEntity<String> findAll(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
                                            @RequestParam(value = "size", defaultValue = "15") int pageSize) {
         return new ResponseEntity<>(houseService.findAll(pageNumber, pageSize), HttpStatus.OK);
     }

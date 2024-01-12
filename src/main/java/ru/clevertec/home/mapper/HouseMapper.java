@@ -8,7 +8,6 @@ import ru.clevertec.home.dto.response.HouseResponse;
 import ru.clevertec.home.entity.House;
 
 @Mapper(uses = AddressMapper.class)
-
 public interface HouseMapper {
 
     HouseMapper INSTANCE = Mappers.getMapper(HouseMapper.class);

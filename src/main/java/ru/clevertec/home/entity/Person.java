@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.NaturalId;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +23,7 @@ public class Person {
     @Column(name = "id")
     private Long id;
 
+    @NaturalId
     @Column(name = "uuid")
     private UUID uuid;
 
@@ -33,9 +36,15 @@ public class Person {
     @Column(name = "sex")
     private String sex;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "passport_id")
     private Passport passport;
+
+    @Column(name = "create_date")
+    private LocalDateTime createDate;
+
+    @Column(name = "update_date")
+    private LocalDateTime updateDate;
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinTable(

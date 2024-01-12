@@ -38,21 +38,21 @@ public class HouseServiceImpl implements HouseService {
     }
 
     @Override
-    @Transactional
     public String findByID(UUID uuid) throws EntityNotFoundException {
         return gson.toJson(
                 houseDAO.findHouseByID(uuid)
-                .map(houseMapper::houseToResponse).
-                orElseThrow(() -> EntityNotFoundException.of(House.class, uuid))
+                        .map(houseMapper::houseToResponse).
+                        orElseThrow(() -> EntityNotFoundException.of(House.class, uuid))
         );
     }
 
     @Override
     public String findAll(int pageNumber, int pageSize) {
         return gson.toJson(
-                houseDAO.findAll(pageNumber, pageSize).stream()
-                .map(houseMapper::houseToResponse)
-                .collect(Collectors.toList())
+                houseDAO.findAll(pageNumber, pageSize)
+                        .stream()
+                        .map(houseMapper::houseToResponse)
+                        .collect(Collectors.toList())
         );
     }
 
