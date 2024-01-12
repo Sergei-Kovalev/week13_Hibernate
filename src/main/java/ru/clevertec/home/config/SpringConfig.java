@@ -20,7 +20,6 @@ import java.util.Properties;
 @PropertySource("classpath:properties.yml")
 public class SpringConfig {
 
-
     @Bean
     public static BeanFactoryPostProcessor beanFactoryPostProcessor() {
         PropertySourcesPlaceholderConfigurer configure = new PropertySourcesPlaceholderConfigurer();
