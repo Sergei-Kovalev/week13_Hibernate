@@ -17,10 +17,7 @@ import ru.clevertec.home.mapper.JDBCPersonMapper;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -196,6 +193,17 @@ public class PersonDAOImpl implements PersonDAO {
         return jdbcTemplate.query(sql, namedParameters, mapper);
     }
 
+    @Override
+    public List<Person> findPersonsSubstring(String substring) {
+        String sql = """
+                SELECT * FROM persons as p
+                INNER JOIN passports as ps ON p.passport_id = ps.id
+                WHERE name LIKE '%:substring%' OR surname LIKE '%:substring%' OR sex LIKE '%:substring%'
+                OR passport_series LIKE '%:substring%' OR passport_number LIKE '%:substring%'
+                """.replaceAll(":substring", substring);
+
+        return jdbcTemplate.query(sql, mapper);
+    }
 
     private static void fillPersonNewData(Person person, Person personForMerge) {
         if (person.getName() != null) {

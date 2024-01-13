@@ -15,6 +15,7 @@ import ru.clevertec.home.mapper.HouseMapperImpl;
 import ru.clevertec.home.service.HouseService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -71,5 +72,15 @@ public class HouseServiceImpl implements HouseService {
     @Override
     public String deleteHouse(UUID uuid) {
         return houseDAO.deleteHouse(uuid);
+    }
+
+    @Override
+    public String findHousesSubstring(String substring) {
+        List<House> houses = houseDAO.findHousesSubstring(substring);
+        return gson.toJson(
+                houses.stream()
+                        .map(houseMapper::houseToResponse)
+                        .collect(Collectors.toList())
+        );
     }
 }

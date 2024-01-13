@@ -1,5 +1,6 @@
 package ru.clevertec.home.controller;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,13 @@ public class HouseController {
 
     @PostMapping
     public ResponseEntity<String> saveHouse(@RequestBody HouseRequest houseRequest) {
-        return new ResponseEntity<>(houseService.saveHouse(houseRequest), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(houseService.saveHouse(houseRequest), HttpStatus.OK);
+        } catch (ConstraintViolationException e) {
+            return new ResponseEntity<>(
+                    "Sorry but house with uuid " + houseRequest.uuid() + " already exist at Database",
+                    HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping
@@ -55,5 +62,10 @@ public class HouseController {
         } else {
             return new ResponseEntity<>(message, HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/substring")
+    public ResponseEntity<String> findHousesSubstring(@RequestParam("substring") String substring) {
+        return new ResponseEntity<>(houseService.findHousesSubstring(substring), HttpStatus.OK);
     }
 }

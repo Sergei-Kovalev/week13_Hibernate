@@ -115,4 +115,14 @@ public class PersonServiceImpl implements PersonService {
                         .collect(Collectors.toList())
         );
     }
+
+    @Override
+    public String findPersonsSubstring(String substring) {
+        List<Person> persons = personDAO.findPersonsSubstring(substring);
+        return gson.toJson(
+                persons.stream()
+                        .map(personMapper::personToResponse)
+                        .collect(Collectors.toList())
+        );
+    }
 }

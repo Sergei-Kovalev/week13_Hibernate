@@ -18,4 +18,6 @@ public interface HouseDAO {
     House updateHouse(UUID uuid, House house);
 
     String deleteHouse(UUID uuid) throws EntityNotFoundException;
+
+    List<House> findHousesSubstring(String substring);
 }

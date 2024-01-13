@@ -16,4 +16,6 @@ public interface HouseService {
     String updateHouse(UUID uuid, HouseRequest houseRequest);
 
     String deleteHouse(UUID uuid) throws EntityNotFoundException;
+
+    String findHousesSubstring(String substring);
 }

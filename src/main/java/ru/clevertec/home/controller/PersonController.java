@@ -1,5 +1,6 @@
 package ru.clevertec.home.controller;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class PersonController {
         try {
             residenceUUID = UUID.fromString(residence);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>("please enter the uuid of the house as \"residence\", a person cannot be homeless", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Please enter the uuid of the house as \"residence\", a person cannot be homeless", HttpStatus.BAD_REQUEST);
         }
         if (ownedHouses.get(0).equalsIgnoreCase("empty")) {
             ownedUUIDs = new ArrayList<>();
@@ -54,6 +55,10 @@ public class PersonController {
             return new ResponseEntity<>(personService.savePerson(personRequest, residenceUUID, ownedUUIDs), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (ConstraintViolationException e) {
+            return new ResponseEntity<>(
+                    "Sorry, field uuid or combination of passport series and passport number must be unique",
+                    HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -121,5 +126,10 @@ public class PersonController {
     @GetMapping("/ownership")
     public ResponseEntity<String> findOwnedHouses(@RequestParam("personUUID") String personUUID) {
         return new ResponseEntity<>(personService.findOwnedHouses(UUID.fromString(personUUID)), HttpStatus.OK);
+    }
+
+    @GetMapping("/substring")
+    public ResponseEntity<String> findPersonsSubstring(@RequestParam("substring") String substring) {
+        return new ResponseEntity<>(personService.findPersonsSubstring(substring), HttpStatus.OK);
     }
 }

@@ -25,4 +25,5 @@ public interface PersonService {
     String deleteOwnership(UUID personUUID, UUID houseUUID);
     String findPersonsLivingInHouse(UUID houseUUID);
     String findOwnedHouses(UUID personUUID);
+    String findPersonsSubstring(String substring);
 }

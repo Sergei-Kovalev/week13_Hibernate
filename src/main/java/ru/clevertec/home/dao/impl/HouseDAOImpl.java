@@ -4,11 +4,14 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.clevertec.home.dao.HouseDAO;
 import ru.clevertec.home.entity.House;
 import ru.clevertec.home.exception.EntityNotFoundException;
+import ru.clevertec.home.mapper.JDBCHouseMapper;
 
+import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +22,11 @@ public class HouseDAOImpl implements HouseDAO {
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private JDBCHouseMapper mapper;
 
     @Override
     public Optional<House> findHouseByID(UUID uuid) {
@@ -43,10 +51,8 @@ public class HouseDAOImpl implements HouseDAO {
     @Override
     public House saveHouse(House house) {
         Session session = sessionFactory.getCurrentSession();
-
         house.setCreateDate(LocalDateTime.now());
         session.persist(house);
-
         return house;
     }
 
@@ -79,5 +85,22 @@ public class HouseDAOImpl implements HouseDAO {
             return "House with uuid = " + uuid.toString() + " was successfully deleted";
         }
         return "House with uuid = " + uuid.toString() + " not present at database";
+    }
+
+    @Override
+    public List<House> findHousesSubstring(String substring) {
+        String sql = """
+                SELECT * FROM houses h
+                INNER JOIN addresses a ON h.address_id = a.id
+                WHERE country LIKE '%:substring%' OR city LIKE '%:substring%'
+                OR street LIKE '%:substring%' OR number LIKE '%:substring%'
+                """.replaceAll(":substring", substring);
+
+        return jdbcTemplate.query(sql, mapper);
+    }
+
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 }

@@ -34,19 +34,4 @@ public class House {
 
     @Column(name = "create_date")
     private LocalDateTime createDate;
-
-//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @JoinTable(
-//            name = "person_owners_houses",
-//            joinColumns = @JoinColumn(name = "house_id"),
-//            inverseJoinColumns = @JoinColumn(name = "person_owner_id")
-//    )
-//    private List<Person> owners;
-//
-//    public void addOwners(Person person) {
-//        if (owners == null) {
-//            owners = new ArrayList<>();
-//        }
-//        owners.add(person);
-//    }
 }

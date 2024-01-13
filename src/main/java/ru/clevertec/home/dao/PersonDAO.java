@@ -25,4 +25,6 @@ public interface PersonDAO {
     String deleteOwnership(UUID personUUID, UUID houseUUID);
 
     List<Person> findPersonsLivingInHouse(UUID houseUUID);
+
+    List<Person> findPersonsSubstring(String substring);
 }
