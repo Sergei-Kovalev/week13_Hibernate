@@ -10,6 +10,8 @@ import ru.clevertec.home.dto.LocalDateTimeTypeAdapter;
 import ru.clevertec.home.dto.request.PersonRequest;
 import ru.clevertec.home.entity.Person;
 import ru.clevertec.home.exception.EntityNotFoundException;
+import ru.clevertec.home.mapper.HouseMapper;
+import ru.clevertec.home.mapper.HouseMapperImpl;
 import ru.clevertec.home.mapper.PersonMapper;
 import ru.clevertec.home.mapper.PersonMapperImpl;
 import ru.clevertec.home.service.PersonService;
@@ -28,9 +30,12 @@ public class PersonServiceImpl implements PersonService {
 
     private final PersonMapper personMapper;
 
+    private final HouseMapper houseMapper;
+
     private final Gson gson;
 
     public PersonServiceImpl() {
+        this.houseMapper = new HouseMapperImpl();
         this.personMapper = new PersonMapperImpl();
         this.gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
@@ -40,10 +45,6 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public String findByID(UUID uuid) throws EntityNotFoundException {
-
-        Person person = personDAO.findPersonByID(uuid)
-                .orElseThrow(() -> EntityNotFoundException.of(Person.class, uuid));
-
         return gson.toJson(
                 personDAO.findPersonByID(uuid)
                         .map(personMapper::personToResponse)
@@ -91,5 +92,27 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public String deleteOwnership(UUID personUUID, UUID houseUUID) {
         return personDAO.deleteOwnership(personUUID, houseUUID);
+    }
+
+    @Override
+    public String findPersonsLivingInHouse(UUID houseUUID) {
+        return gson.toJson(
+                personDAO.findPersonsLivingInHouse(houseUUID)
+                        .stream()
+                        .map(personMapper::personToResponse)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    @Override
+    public String findOwnedHouses(UUID personUUID) {
+        Person person = personDAO.findPersonByID(personUUID)
+                .orElseThrow(() -> EntityNotFoundException.of(Person.class, personUUID));
+
+        return gson.toJson(
+                person.getOwnerHouses().stream()
+                        .map(houseMapper::houseToResponse)
+                        .collect(Collectors.toList())
+        );
     }
 }

@@ -112,4 +112,14 @@ public class PersonController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/residents")
+    public ResponseEntity<String> findPersonsLivingInHouse(@RequestParam("houseUUID") String houseUUID) {
+        return new ResponseEntity<>(personService.findPersonsLivingInHouse(UUID.fromString(houseUUID)), HttpStatus.OK);
+    }
+
+    @GetMapping("/ownership")
+    public ResponseEntity<String> findOwnedHouses(@RequestParam("personUUID") String personUUID) {
+        return new ResponseEntity<>(personService.findOwnedHouses(UUID.fromString(personUUID)), HttpStatus.OK);
+    }
 }

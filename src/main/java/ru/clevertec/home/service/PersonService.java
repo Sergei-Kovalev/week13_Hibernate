@@ -23,4 +23,6 @@ public interface PersonService {
     String addOwnership(UUID personUUID, UUID houseUUID);
 
     String deleteOwnership(UUID personUUID, UUID houseUUID);
+    String findPersonsLivingInHouse(UUID houseUUID);
+    String findOwnedHouses(UUID personUUID);
 }

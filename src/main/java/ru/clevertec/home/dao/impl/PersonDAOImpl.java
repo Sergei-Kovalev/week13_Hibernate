@@ -4,13 +4,18 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import ru.clevertec.home.dao.HouseDAO;
 import ru.clevertec.home.dao.PersonDAO;
 import ru.clevertec.home.entity.House;
 import ru.clevertec.home.entity.Person;
 import ru.clevertec.home.exception.EntityNotFoundException;
+import ru.clevertec.home.mapper.JDBCPersonMapper;
 
+import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +30,12 @@ public class PersonDAOImpl implements PersonDAO {
 
     @Autowired
     private HouseDAO houseDAO;
+
+    private NamedParameterJdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private JDBCPersonMapper mapper;
+
 
     @Override
     public Optional<Person> findPersonByID(UUID uuid) {
@@ -171,6 +182,21 @@ public class PersonDAOImpl implements PersonDAO {
         return "Person with uuid = " + personUUID + " or house with uuid = " + houseUUID + " not present at database";
     }
 
+    @Override
+    public List<Person> findPersonsLivingInHouse(UUID houseUUID) {
+        String sql = """
+                SELECT * FROM persons as p
+                INNER JOIN passports as ps
+                ON p.passport_id = ps.id
+                WHERE p.residence_id =
+                    (SELECT h.id FROM houses AS h
+                     WHERE h.uuid = :uuid)
+                """;
+        SqlParameterSource namedParameters = new MapSqlParameterSource("uuid", houseUUID);
+        return jdbcTemplate.query(sql, namedParameters, mapper);
+    }
+
+
     private static void fillPersonNewData(Person person, Person personForMerge) {
         if (person.getName() != null) {
             personForMerge.setName(person.getName());
@@ -185,5 +211,10 @@ public class PersonDAOImpl implements PersonDAO {
             personForMerge.setPassport(person.getPassport());
         }
         personForMerge.setUpdateDate(LocalDateTime.now());
+    }
+
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 }
