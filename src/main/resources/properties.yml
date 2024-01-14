@@ -4,6 +4,11 @@ db:
   login: postgres
   password: postgres
 
+liquibase:
+  enabled: true
+  changelog: classpath:db/changelog/db.changelog-master.yml
+  drop: true
+
 hibernate:
   dialect: org.hibernate.dialect.PostgreSQLDialect
   show_sql: true
