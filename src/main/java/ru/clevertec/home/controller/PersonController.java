@@ -59,6 +59,10 @@ public class PersonController {
             return new ResponseEntity<>(
                     "Sorry, field uuid or combination of passport series and passport number must be unique",
                     HttpStatus.BAD_REQUEST);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(
+                    "Sorry, field sex contains only MALE or FEMALE values",
+                    HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -68,6 +72,14 @@ public class PersonController {
             return new ResponseEntity<>(personService.updatePerson(UUID.fromString(uuid), personRequest), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (ConstraintViolationException e) {
+            return new ResponseEntity<>(
+                    "Sorry, field uuid or combination of passport series and passport number must be unique",
+                    HttpStatus.BAD_REQUEST);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(
+                    "Sorry, field sex contains only MALE or FEMALE values",
+                    HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -120,12 +132,20 @@ public class PersonController {
 
     @GetMapping("/residents")
     public ResponseEntity<String> findPersonsLivingInHouse(@RequestParam("houseUUID") String houseUUID) {
-        return new ResponseEntity<>(personService.findPersonsLivingInHouse(UUID.fromString(houseUUID)), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(personService.findPersonsLivingInHouse(UUID.fromString(houseUUID)), HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/ownership")
     public ResponseEntity<String> findOwnedHouses(@RequestParam("personUUID") String personUUID) {
-        return new ResponseEntity<>(personService.findOwnedHouses(UUID.fromString(personUUID)), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(personService.findOwnedHouses(UUID.fromString(personUUID)), HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/substring")
