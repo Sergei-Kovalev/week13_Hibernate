@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changeset/v-1-0/ddl/2024-01-14-create-table-addresses--1.sql
+
+  - include:
+      file: db/changelog/changeset/v-1-0/ddl/2024-01-14-create-table-houses--2.sql
+
+  - include:
+      file: db/changelog/changeset/v-1-0/ddl/2024-01-14-create-table-passports--3.sql
+
+  - include:
+      file: db/changelog/changeset/v-1-0/ddl/2024-01-14-create-table-persons--4.sql
+
+  - include:
+      file: db/changelog/changeset/v-1-0/ddl/2024-01-14-create-table-person_owners_houses--5.sql
+
+
+  - include:
+      file: db/changelog/changeset/v-1-0/dml/2024-01-14-table-data-addresses--1.sql
+
+
+  - include:
+      file: db/changelog/changeset/v-1-0/dml/2024-01-14-table-data-houses--2.sql
+
+
+  - include:
+      file: db/changelog/changeset/v-1-0/dml/2024-01-14-table-data-passports--3.sql
+
+
+  - include:
+      file: db/changelog/changeset/v-1-0/dml/2024-01-14-table-data-persons--4.sql
+
+
+  - include:
+      file: db/changelog/changeset/v-1-0/dml/2024-01-14-table-data-person_owners_houses--5.sql
+
