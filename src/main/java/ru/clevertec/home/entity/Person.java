@@ -34,7 +34,8 @@ public class Person {
     private String surname;
 
     @Column(name = "sex")
-    private String sex;
+    @Enumerated(EnumType.STRING)
+    private PersonSex sex;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "passport_id")

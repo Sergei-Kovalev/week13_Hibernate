@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import ru.clevertec.home.entity.Passport;
 import ru.clevertec.home.entity.Person;
+import ru.clevertec.home.entity.PersonSex;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +26,7 @@ public class JDBCPersonMapper implements RowMapper<Person> {
         person.setUuid(UUID.fromString(rs.getString("uuid")));
         person.setName(rs.getString("name"));
         person.setSurname(rs.getString("surname"));
-        person.setSex(rs.getString("sex"));
+        person.setSex(PersonSex.valueOf(rs.getString("sex")));
         person.setPassport(passport);
         person.setResidence(null);
         person.setCreateDate(rs.getObject("create_date", LocalDateTime.class));
